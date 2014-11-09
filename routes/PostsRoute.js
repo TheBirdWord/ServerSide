@@ -21,7 +21,7 @@ function PostsRoute() {
 
 PostsRoute.prototype = {
   findAll: function(req, res) {
-    return postModel.find().all( function( posts) {
+    return postModel.find({}, function(err, posts) {
       if(!posts) {
           res.statusCode = 404;
           return res.send({ error: 'Not found' });
