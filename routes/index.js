@@ -18,9 +18,9 @@ module.exports = exports = function(app) {
 	// begin resources
   app.get('/post/loc/:lat/:long', posts.findByLoc);
   app.get('/post/id/:id', posts.findById);
-  app.post('/post', posts.addPost);
+  app.post('/post', auth.authenticate('bearer', {session: false}), posts.addPost);
   app.put('/post/:id', posts.updatePost);
-  app.delete('/post/:id', posts.deletePost);
+  app.delete('/post/:id', auth.authenticate('bearer', {session: false}), posts.deletePost);
 
   app.post('/auth/token', auth.token);
 

@@ -1,5 +1,19 @@
 var logger = require('../lib/log');
-var model = require('../models/PostsModel');
+var postModel = require('../models/PostsModel');
+var postOwnerModel = require('../models/PostsOwnerModel');
+
+function handleError(res, err) {
+   console.log(err);
+   if(err.name == 'ValidationError') {
+       res.statusCode = 400;
+       res.send({ error: 'Validation error' });
+   } else {
+       res.statusCode = 500;
+       res.send({ error: 'Server error' });
+   }
+   logger.error('Internal error(%d): %s',res.statusCode,err.message);
+}
+
 
 function PostsRoute() {
 
@@ -11,7 +25,7 @@ PostsRoute.prototype = {
    },
 
    findById: function(req, res) {
-      return model.findById(req.params.id, function (err, post) {
+      return postModel.findById(req.params.id, function (err, post) {
         if(!post) {
             res.statusCode = 404;
             return res.send({ error: 'Not found' });
@@ -27,26 +41,42 @@ PostsRoute.prototype = {
    },
 
    addPost: function(req, res) {
-      var post = new model({
-         title: req.body.title
-       });
 
-      post.save(function (err) {
-        if (!err) {
-            logger.info("post created");
+      postModel.create({
+         title: req.body.title,
+         content: req.body.content,
+         media: req.body.media,
+         location: {
+            latitude: parseDouble(req.body.latitude),
+            longitude: parseDouble(req.body.longitude)
+         },
+         poster: req.body.handle
+      }, function(err, post) {
+         if (!err) {
+            var post = new postOwnerModel({
+               postId: post.postId,
+               userId: req.user.userId
+            });
+            post.save(function(err) {
+               if (!err) {
+                  logger.info("PostOwner created");
+               } else {
+                  PostModel.remove({ postId: post.postId}, function(err) {
+                     if (!err) {
+                        logger.info("PostOwner create failed - Successfully removed Post");
+                     } else {
+                        handleError(res, err);
+                     }
+                  });
+                  handleError(res, err);
+               }
+            });
+            logger.info("Post created");
             return res.send({ status: 'OK', post:post });
         } else {
-            console.log(err);
-            if(err.name == 'ValidationError') {
-                res.statusCode = 400;
-                res.send({ error: 'Validation error' });
-            } else {
-                res.statusCode = 500;
-                res.send({ error: 'Server error' });
-            }
-            logger.error('Internal error(%d): %s',res.statusCode,err.message);
+            handleError(res, err);
         }
-    });
+      });
    },
 
    updatePost: function(req, res) {
