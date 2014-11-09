@@ -27,7 +27,7 @@ PostsRoute.prototype = {
    },
 
    addPost: function(req, res) {
-      var post = new ArticleModel({
+      var post = new model({
          title: req.body.title
        });
 
