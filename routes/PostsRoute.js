@@ -41,16 +41,15 @@ PostsRoute.prototype = {
    },
 
    addPost: function(req, res) {
-
       postModel.create({
-         title: req.body.title,
-         content: req.body.content,
-         media: req.body.media,
+         title: req.headers.title,
+         content: req.headers.content,
+         media: req.headers.media,
          location: {
-            latitude: parseFloat(req.body.latitude),
-            longitude: parseFloat(req.body.longitude)
+            latitude: req.headers.latitude,
+            longitude: req.headers.longitude
          },
-         poster: req.body.handle
+         poster: req.headers.handle
       }, function(err, post) {
          if (!err) {
             var post = new postOwnerModel({
