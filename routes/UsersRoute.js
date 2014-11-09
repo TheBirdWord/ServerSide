@@ -15,7 +15,7 @@ UsersRoute.prototype = {
       user.save(function (err) {
         if (!err) {
             logger.info("User created - %s", user.username);
-            return res.send({ status: 'OK', username:user.username});
+            return res.send({ status: 'OK', action: 'created', username:user.username, userId:user.userId});
          } else {
             console.log(err);
             if(err.name == 'ValidationError') {
