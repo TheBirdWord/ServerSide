@@ -38,11 +38,11 @@ CommentsRoute.prototype = {
 
   addComment: function(req, res) {
     commentModel.create({
-       content: req.headers.content,
-       media: req.headers.media,
-       poster: req.headers.handle,
-       parentPostId: req.headers.postId,
-       parentCommentId: req.headers.parentCommentId
+       content: req.body.content,
+       media: req.body.media,
+       poster: req.body.handle,
+       parentPostId: req.body.postId,
+       parentCommentId: req.body.parentCommentId
     }, function(err, comment) {
        if (!err) {
           var comment = new commentOwnerModel({

@@ -46,6 +46,10 @@ var Post = new db.schema({
    poster: {
       type: String,
       required: true
+   },
+   created: {
+      type: Date,
+      default: Date.now
    }
 });
 

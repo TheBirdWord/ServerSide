@@ -29,7 +29,12 @@ var Comment = new db.schema({
    },
    parentCommentId: {
       type: String,
-      required: true
+      required: false,
+      default: ""
+   },
+   created: {
+      type: Date,
+      default: Date.now
    }
 });
 
