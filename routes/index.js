@@ -1,4 +1,5 @@
 var posts = require('./PostsRoute');
+var comments = require('./CommentsRoute');
 var auth = require('./AuthRoute');
 var user = require('./UsersRoute');
 var client = require('./ClientsRoute');
@@ -22,6 +23,11 @@ module.exports = exports = function(app) {
   app.post('/post', auth.authenticate('bearer', {session: false}), posts.addPost);
   app.put('/post/:id', auth.authenticate('bearer', {session: false}), posts.updatePost);
   app.delete('/post/:id', auth.authenticate('bearer', {session: false}), posts.deletePost);
+
+  app.get('/comment/id/:id', comments.findById);
+  app.post('/comment', auth.authenticate('bearer', {session: false}), comments.addComment);
+  app.put('/comment/:id', auth.authenticate('bearer', {session: false}), comments.updateComment);
+  app.delete('/comment/:id', auth.authenticate('bearer', {session: false}), comments.deleteComment);
 
   app.post('/auth/token', auth.token);
 

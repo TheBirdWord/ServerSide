@@ -55,8 +55,8 @@ Post.virtual('postId')
    });
 
 // validation
-//Post.path('title').validate(function (v) {
-//    return v.length > 0 && v.length < 70;
-//});
+Post.path('title').validate(function (v) {
+    return v.length > 0 && v.length < 70;
+});
 
 module.exports = db.model("Post", Post);
