@@ -47,8 +47,8 @@ PostsRoute.prototype = {
          content: req.body.content,
          media: req.body.media,
          location: {
-            latitude: parseDouble(req.body.latitude),
-            longitude: parseDouble(req.body.longitude)
+            latitude: parseFloat(req.body.latitude),
+            longitude: parseFloat(req.body.longitude)
          },
          poster: req.body.handle
       }, function(err, post) {
